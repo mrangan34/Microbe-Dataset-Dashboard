@@ -1,42 +1,29 @@
 //Read samples.json
 d3.json("samples.json").then(function(bellybutton) {
-    // console.log(bellybutton.samples);
+   
+    var bellybutton_samples = bellybutton.samples;
+    console.log(bellybutton_samples);
 
-    //creating arrays from larger array
-    var bellybutton_array = bellybutton.samples;
-    
-    // console.log("printing bellybutton array")
-    // console.log(bellybutton_array);
+    // var sample_ids_map = bellybutton_samples.map(object=>object.id);
 
-    // var bellybutton_map = bellybutton_array.map(object=>object.id);
-    // console.log(bellybutton_map);
-
-    var sample_ids_map = bellybutton_array.map(object=>object.id);
-    // console.log("printing sample ID map");
-    // console.log(sample_ids_map);
-
-    var otu_ids_map = bellybutton_array.map(object=>object.otu_ids);
+    // var otu_ids_map = bellybutton_samples.map(object=>object.otu_ids);
     // console.log(otu_ids_map);
 
-    var sample_values_map = bellybutton_array.map(object=>object.sample_values);
-    // console.log(sample_values_map);
+    // var sample_values_map = bellybutton_samples.map(object=>object.sample_values);
 
-    var otu_labels_map = bellybutton_array.map(object=>object.otu_labels);
+    // var otu_labels_map = bellybutton_samples.map(object=>object.otu_labels);
     // console.log(otu_labels_map);
 
     // add every sample to the dropdown menu
     d3.select("select")
     .selectAll("option")
-    .data(bellybutton_array)
+    .data(bellybutton_samples)
     .enter()
     .append("option")
     .text(function(d) {
     return `${d.id}`;
     });
 
-    var defaultData = bellybutton_array[0].id;
-    // console.log("now loading plots for sample number")
-    console.log(defaultData);
     
 
     // On change to the DOM, call getData()
@@ -52,21 +39,14 @@ d3.json("samples.json").then(function(bellybutton) {
         // console.log(dataset)
     //     // Initialize an empty array for the sample's data
     //     // var data = [];
-        var newDataSample = bellybutton_array.filter(findSample => findSample.id == dataset);
-        
-        // console.log("printing chosen sample object");
-        console.log(newDataSample);
-        // console.log("printing otu ids of the chosen sample")
+        var newDataSample = bellybutton_samples.filter(findSample => findSample.id == dataset);
+       
         var selected_sample_otu_ids = newDataSample[0].otu_ids;
-        // console.log(selected_sample_otu_ids);
-
-        // console.log("printing otu labels of the chosen sample")
+       
         var selected_sample_otu_labels = newDataSample[0].otu_labels;
-        // console.log(selected_sample_otu_labels);
-
-        // console.log("printing sample_values of the chosen sample")
+      
         var selected_sample_sample_values = newDataSample[0].sample_values;
-        // console.log(selected_sample_sample_values);
+       
 
         var newDataMetadata = bellybutton.metadata.filter(findSample => findSample.id == dataset);
         console.log(newDataMetadata)
@@ -75,16 +55,11 @@ d3.json("samples.json").then(function(bellybutton) {
         var gender = newDataMetadata[0].gender;
         var location = newDataMetadata[0].location;
         var washFrequency = newDataMetadata[0].wfreq;
-        console.log(age);
-        console.log(ethnicity);
-
-
-
+        
         // clear demographic table
         d3.select("h3");
         d3.selectAll("panel-title");
         d3.selectAll("p").remove();
-
 
         // add demographic info to table
         d3.select("h3")
@@ -144,8 +119,8 @@ d3.json("samples.json").then(function(bellybutton) {
         var data = [{
             type: 'bar',
             // hovertemplate: 'hello',
-            y: selected_sample_otu_ids,
-            x: selected_sample_sample_values,
+            y: selected_sample_otu_ids.slice(0,10).reverse(),
+            x: selected_sample_sample_values.slice(0,10).reverse(),
             orientation: 'h'
           }];
           
@@ -204,7 +179,31 @@ d3.json("samples.json").then(function(bellybutton) {
         };
         Plotly.newPlot('bar', data, layout);
 
+        var log_selected_sample_sample_values = selected_sample_sample_values.map(Math.log);
+        var log_selected_sample_sample_values = log_selected_sample_sample_values.map(value=>value*10);
 
+        //bubble chart
+        var trace1 = {
+            x: selected_sample_otu_ids,
+            y: selected_sample_sample_values,
+            mode: 'markers',
+            marker: {
+                size: log_selected_sample_sample_values,
+                
+              }
+            }
+          
+          
+        var data = [trace1];
+        
+        var layout = {
+        title: 'OTU ID and Sample Value',
+        showlegend: false,
+        height: 600,
+        width: 600
+        };
+        
+        Plotly.newPlot('bubble', data, layout);
 
     
   
@@ -219,7 +218,7 @@ d3.json("samples.json").then(function(bellybutton) {
 
 
     // //change the chart data if the dropdown menu selection changes
-    // var newData = bellybutton_array.filter(object => object.id);
+    // var newData = bellybutton_samples.filter(object => object.id);
     // var filteredData = samples.filter(sampleObject => sampleObject.id == sample);
 
 
