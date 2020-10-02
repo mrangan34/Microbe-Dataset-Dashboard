@@ -4,15 +4,6 @@ d3.json("samples.json").then(function(bellybutton) {
     var bellybutton_samples = bellybutton.samples;
     console.log(bellybutton_samples);
 
-    // var sample_ids_map = bellybutton_samples.map(object=>object.id);
-
-    // var otu_ids_map = bellybutton_samples.map(object=>object.otu_ids);
-    // console.log(otu_ids_map);
-
-    // var sample_values_map = bellybutton_samples.map(object=>object.sample_values);
-
-    // var otu_labels_map = bellybutton_samples.map(object=>object.otu_labels);
-    // console.log(otu_labels_map);
 
     // add every sample to the dropdown menu
     d3.select("select")
@@ -36,9 +27,7 @@ d3.json("samples.json").then(function(bellybutton) {
         
     //     // Assign the value of the dropdown menu option to a variable
         var dataset = dropdownMenu.property("value");
-        // console.log(dataset)
-    //     // Initialize an empty array for the sample's data
-    //     // var data = [];
+  
         var newDataSample = bellybutton_samples.filter(findSample => findSample.id == dataset);
        
         var selected_sample_otu_ids = newDataSample[0].otu_ids;
@@ -48,6 +37,8 @@ d3.json("samples.json").then(function(bellybutton) {
         var selected_sample_sample_values = newDataSample[0].sample_values;
        
 
+        //metadata 
+        
         var newDataMetadata = bellybutton.metadata.filter(findSample => findSample.id == dataset);
         console.log(newDataMetadata)
         var age = newDataMetadata[0].age;
@@ -227,17 +218,7 @@ d3.json("samples.json").then(function(bellybutton) {
   
         //getData closing parentheses
         }
-       
-
-    // );
     
-
-    // //set the data for the default graphs to be the first sample
-
-
-    // //change the chart data if the dropdown menu selection changes
-    // var newData = bellybutton_samples.filter(object => object.id);
-    // var filteredData = samples.filter(sampleObject => sampleObject.id == sample);
 
 
 
