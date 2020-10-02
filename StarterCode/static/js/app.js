@@ -1,6 +1,6 @@
 //Read samples.json
 d3.json("samples.json").then(function(bellybutton) {
-    console.log(bellybutton.samples);
+    // console.log(bellybutton.samples);
 
     //creating arrays from larger array
     var bellybutton_array = bellybutton.samples;
@@ -35,7 +35,7 @@ d3.json("samples.json").then(function(bellybutton) {
     });
 
     var defaultData = bellybutton_array[0].id;
-    console.log("now loading plots for sample number")
+    // console.log("now loading plots for sample number")
     console.log(defaultData);
     
 
@@ -44,32 +44,106 @@ d3.json("samples.json").then(function(bellybutton) {
 
     // Function called by DOM changes
     function getData() {
-        console.log("a change in selection has occured");
+        // console.log("a change in selection has occured");
         var dropdownMenu = d3.select("#selDataset");
         
     //     // Assign the value of the dropdown menu option to a variable
         var dataset = dropdownMenu.property("value");
-        console.log(dataset)
+        // console.log(dataset)
     //     // Initialize an empty array for the sample's data
     //     // var data = [];
         var newDataSample = bellybutton_array.filter(findSample => findSample.id == dataset);
         
-        console.log("printing chosen sample object");
+        // console.log("printing chosen sample object");
         console.log(newDataSample);
-        console.log("printing otu ids of the chosen sample")
+        // console.log("printing otu ids of the chosen sample")
         var selected_sample_otu_ids = newDataSample[0].otu_ids;
-        console.log(selected_sample_otu_ids);
+        // console.log(selected_sample_otu_ids);
 
-        console.log("printing otu labels of the chosen sample")
+        // console.log("printing otu labels of the chosen sample")
         var selected_sample_otu_labels = newDataSample[0].otu_labels;
-        console.log(selected_sample_otu_labels);
+        // console.log(selected_sample_otu_labels);
 
-        console.log("printing sample_values of the chosen sample")
+        // console.log("printing sample_values of the chosen sample")
         var selected_sample_sample_values = newDataSample[0].sample_values;
-        console.log(selected_sample_sample_values);
+        // console.log(selected_sample_sample_values);
+
+        var newDataMetadata = bellybutton.metadata.filter(findSample => findSample.id == dataset);
+        console.log(newDataMetadata)
+        var age = newDataMetadata[0].age;
+        var ethnicity = newDataMetadata[0].ethnicity;
+        var gender = newDataMetadata[0].gender;
+        var location = newDataMetadata[0].location;
+        var washFrequency = newDataMetadata[0].wfreq;
+        console.log(age);
+        console.log(ethnicity);
+
+
+
+        // clear demographic table
+        d3.select("h3");
+        d3.selectAll("panel-title");
+        d3.selectAll("p").remove();
+
+
+        // add demographic info to table
+        d3.select("h3")
+        .selectAll("panel-title")
+        .data(newDataMetadata)
+        .enter()
+        .append("p")
+        .text(function(d) {
+        return `Age: ${age}`;
+        });
+
+        // add demographic info to table
+        d3.select("h3")
+        .selectAll("panel-title")
+        .data(newDataMetadata)
+        .enter()
+        .append("p")
+        .text(function(d) {
+        return `ethnicity: ${ethnicity}`;
+        });
+
+
+        // add demographic info to table
+        d3.select("h3")
+        .selectAll("panel-title")
+        .data(newDataMetadata)
+        .enter()
+        .append("p")
+        .text(function(d) {
+        return `Gender: ${gender}`;
+        });
+
+
+        // add demographic info to table
+        d3.select("h3")
+        .selectAll("panel-title")
+        .data(newDataMetadata)
+        .enter()
+        .append("p")
+        .text(function(d) {
+        return `Location: ${location}`;
+        });
+
+
+        // add demographic info to table
+        d3.select("h3")
+        .selectAll("panel-title")
+        .data(newDataMetadata)
+        .enter()
+        .append("p")
+        .text(function(d) {
+        return `Wash Frequency: ${washFrequency}`;
+        });
+
+
 
         var data = [{
             type: 'bar',
+            // hovertemplate: 'hello',
             y: selected_sample_otu_ids,
             x: selected_sample_sample_values,
             orientation: 'h'
