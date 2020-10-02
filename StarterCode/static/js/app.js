@@ -35,37 +35,9 @@ d3.json("samples.json").then(function(bellybutton) {
     });
 
     var defaultData = bellybutton_array[0].id;
-    console.log("now loading graphs for sample number")
+    console.log("now loading plots for sample number")
     console.log(defaultData);
     
-
-    // var data = [{
-    //     type: 'bar',
-    //     x: [20, 14, 23],
-    //     y: ['giraffes', 'orangutans', 'monkeys'],
-    //     orientation: 'h'
-    //   }];
-      
-    //   Plotly.newPlot('bar', data);
-
-    //   Plotly.newPlot('bubble', data, layout); 
-    // // Bar Chart
-    // var trace1 = {
-    //     x: sample_values.slice(0,10).reverse(),
-    //     y: otu_ids.slice(0,10).map(otuID => `OTU ${otuID}`).reverse(),
-    //     text: otu_labels.slice(0,10).reverse(),
-    //     name: "Greek",
-    //     type: "bar",
-    //     orientation: "h"
-    // };
-    // var data = [trace1];
-    // var layout = {
-    //     title: "Top Ten OTUs for Individual " +sample,
-    //     margin: {l: 100, r: 100, t: 100, b: 100}
-    // };
-    // Plotly.newPlot("bar", data, layout);  
-    // });
-  
 
     // On change to the DOM, call getData()
     d3.selectAll("#selDataset").on("change", getData);
@@ -74,18 +46,96 @@ d3.json("samples.json").then(function(bellybutton) {
     function getData() {
         console.log("a change in selection has occured");
         var dropdownMenu = d3.select("#selDataset");
+        
     //     // Assign the value of the dropdown menu option to a variable
         var dataset = dropdownMenu.property("value");
         console.log(dataset)
     //     // Initialize an empty array for the sample's data
     //     // var data = [];
         var newDataSample = bellybutton_array.filter(findSample => findSample.id == dataset);
-            console.log("printing chosen sample");
-            console.log(newDataSample);
-    }
-    //  
         
-        // }
+        console.log("printing chosen sample object");
+        console.log(newDataSample);
+        console.log("printing otu ids of the chosen sample")
+        var selected_sample_otu_ids = newDataSample[0].otu_ids;
+        console.log(selected_sample_otu_ids);
+
+        console.log("printing otu labels of the chosen sample")
+        var selected_sample_otu_labels = newDataSample[0].otu_labels;
+        console.log(selected_sample_otu_labels);
+
+        console.log("printing sample_values of the chosen sample")
+        var selected_sample_sample_values = newDataSample[0].sample_values;
+        console.log(selected_sample_sample_values);
+
+        var data = [{
+            type: 'bar',
+            y: selected_sample_otu_ids,
+            x: selected_sample_sample_values,
+            orientation: 'h'
+          }];
+          
+
+        var layout = {
+        title: 'Top 10 OTUs for selected sample',
+        xaxis1: {
+    
+            domain: [0, 0.5],
+
+            zeroline: true,
+            showline: true,
+            showticklabels: true,
+            showgrid: true
+        },
+        yaxis: {
+            type: 'category',
+            zeroline: true,
+            showline: true,
+            showticklabels: true,
+            showgrid: true
+            
+        },
+        
+        legend: {
+            x: 0.029,
+            y: 1.238,
+            font: {
+            size: 10
+            }
+        },
+        margin: {
+            l: 100,
+            r: 20,
+            t: 200,
+            b: 70
+        },
+        width: 900,
+        height: 900,
+        paper_bgcolor: 'rgb(248,248,255)',
+        plot_bgcolor: 'rgb(248,248,255)',
+        annotations: [
+            {
+            xref: 'paper',
+            yref: 'paper',
+            x: -0.2,
+            y: -0.109,
+            showarrow: false,
+            font:{
+                family: 'Arial',
+                size: 10,
+                color: 'rgb(150,150,150)'
+            }
+            }
+        ]
+        };
+        Plotly.newPlot('bar', data, layout);
+
+
+
+    
+  
+        //getData closing parentheses
+        }
        
 
     // );
