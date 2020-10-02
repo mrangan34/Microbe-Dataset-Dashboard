@@ -114,11 +114,11 @@ d3.json("samples.json").then(function(bellybutton) {
         return `Wash Frequency: ${washFrequency}`;
         });
 
-
+        //bar chart
 
         var data = [{
             type: 'bar',
-            // hovertemplate: 'hello',
+            text: selected_sample_otu_labels,
             y: selected_sample_otu_ids.slice(0,10).reverse(),
             x: selected_sample_sample_values.slice(0,10).reverse(),
             orientation: 'h'
@@ -128,7 +128,8 @@ d3.json("samples.json").then(function(bellybutton) {
         var layout = {
         title: 'Top 10 OTUs for selected sample',
         xaxis1: {
-    
+            title: {
+                text: 'Sample Value'},
             domain: [0, 0.5],
 
             zeroline: true,
@@ -137,6 +138,8 @@ d3.json("samples.json").then(function(bellybutton) {
             showgrid: true
         },
         yaxis: {
+            title: {
+                text: 'OTU ID'},
             type: 'category',
             zeroline: true,
             showline: true,
@@ -179,16 +182,21 @@ d3.json("samples.json").then(function(bellybutton) {
         };
         Plotly.newPlot('bar', data, layout);
 
+
+        //bubble chart
         var log_selected_sample_sample_values = selected_sample_sample_values.map(Math.log);
         var log_selected_sample_sample_values = log_selected_sample_sample_values.map(value=>value*10);
 
-        //bubble chart
+       
         var trace1 = {
             x: selected_sample_otu_ids,
+            
             y: selected_sample_sample_values,
+            text: selected_sample_otu_labels,
+            
             mode: 'markers',
             marker: {
-                size: log_selected_sample_sample_values,
+            size: log_selected_sample_sample_values,
                 
               }
             }
@@ -197,10 +205,20 @@ d3.json("samples.json").then(function(bellybutton) {
         var data = [trace1];
         
         var layout = {
-        title: 'OTU ID and Sample Value',
+        title: 'All OTU IDs and Sample Values for Selected Sample',
         showlegend: false,
         height: 600,
-        width: 600
+        width: 600,
+        xaxis: {
+            title: {
+              text: 'OTU ID',
+            
+            },
+          },
+          yaxis: {
+            title: {
+              text: 'Sample Value',
+             }}
         };
         
         Plotly.newPlot('bubble', data, layout);
