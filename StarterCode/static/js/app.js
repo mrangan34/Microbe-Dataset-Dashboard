@@ -15,12 +15,7 @@ d3.json("samples.json").then(function(bellybutton) {
     return `${d.id}`;
     });
 
-    
-
-    // On change to the DOM, call getData()
-    d3.selectAll("#selDataset").on("change", getData);
-
-    // Function called by DOM changes
+   // Function called automatically
     function getData() {
         // console.log("a change in selection has occured");
         var dropdownMenu = d3.select("#selDataset");
@@ -219,16 +214,13 @@ d3.json("samples.json").then(function(bellybutton) {
         //getData closing parentheses
         }
     
+    getData()
+    // On change to the DOM, call getData()
+    d3.selectAll("#selDataset").on("change", getData);
 
 
-
-
-
-
-
-
-init();
 
 
 });
 
+init();
